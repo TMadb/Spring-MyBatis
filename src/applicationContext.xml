@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <!-- 配置SqlSessionFactory，用于生产SqlSession
+       用于容器生成对象，所以需要放置MyBaytis的主配置文件路径
+   -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+    <!-- 配置MyBatis的主配置文件路径 -->
+    <property name="configLocation" value="classpath:mybatisconfig.xml"></property>
+    <!-- 配置连接数据库的四大参数 -->
+    <property name="dataSource" ref="datasource"></property>
+  </bean>
+  
+  <!-- 配置dataSource(数据源) -->
+  <bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+   <!-- 配置数据库的四大连接参数 -->
+   <property name="driverClass" value="${jdbc.driver}"></property>
+   <property name="jdbcUrl" value="${jdbc.url}"></property> 
+   <property name="user" value="${jdbc.username}"></property>
+   <property name="password" value="${jdbc.password}"></property>
+  </bean>
+   <!-- 指定数据库配置文件的路径 -->
+   <context:property-placeholder location="classpath:mysql.properties" />
+   
+   <!-- 配置自动扫描Dao下的包
+        扫描到以后让SqlSessionFactory自动创建对象
+        所以需要配置SqlSessionFacoty工厂的名称，指定由他来生产对象
+    -->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+      <property name="basePackage" value="com.org.dao"></property>
+      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    
+    <!-- 配置Dao层实现类的Bean
+         用设值注入的方式设值CourseDao对象
+         容器自动生成的对象均是首字母小写，后面的不变
+         特殊情况:当使用两个大写字母开头为类名时，容器返回的对象是原名
+     -->
+     <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
+       <property name="courseDao" ref="courseDao"></property>
+     </bean>
+</beans>

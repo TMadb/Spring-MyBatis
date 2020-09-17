@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+   
+   <typeAliases>
+     <!-- 自动扫描实体类包下的所有类 -->
+    <package name="com.org.entity"/>
+   </typeAliases>
+   <!-- 数据库的连接全部交由Spring托管 -->
+   <mappers>
+   <!-- 将映射文件添加到主配置文件中 -->
+   <!-- 自动扫描Dao下的所有类 -->
+	 <package name="com.org.dao"/>	
+   </mappers>
+ </configuration>
