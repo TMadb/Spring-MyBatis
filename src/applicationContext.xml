@@ -26,6 +26,7 @@
    <property name="user" value="${jdbc.username}"></property>
    <property name="password" value="${jdbc.password}"></property>
   </bean>
+  
    <!-- 指定数据库配置文件的路径 -->
    <context:property-placeholder location="classpath:mysql.properties" />
    
@@ -43,7 +44,9 @@
          容器自动生成的对象均是首字母小写，后面的不变
          特殊情况:当使用两个大写字母开头为类名时，容器返回的对象是原名
      -->
-     <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
+     <!-- <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
        <property name="courseDao" ref="courseDao"></property>
-     </bean>
+     </bean> -->
+     <!-- 注解配置 -->
+     <context:component-scan base-package="com.org.dao.impl" />
 </beans>

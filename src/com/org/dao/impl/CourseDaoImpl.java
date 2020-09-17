@@ -1,10 +1,16 @@
 package com.org.dao.impl;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.org.dao.CourseDao;
 import com.org.entity.Course;
 
+@Service
 public class CourseDaoImpl implements CourseDao {
 	
+	@Resource
 	CourseDao courseDao;
 	
 	
