@@ -19,7 +19,7 @@ public class CourseDaoImplTest {
 	
 	@Test
 	public void testinsertCourse() {
-		Course course = new Course(9,"Mysql");
+		Course course = new Course(10,"Nginx");
 		courseDaoImpl.insertCourse(course);
 	}
 }

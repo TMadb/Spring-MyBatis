@@ -55,7 +55,7 @@ public class ManPeopleTest {
 					}
 				});
 		System.out.println(myProxyInstance.getClass());
-//		myProxyInstance.eat();
+		myProxyInstance.eat();
 //		System.out.println(myProxyInstance instanceof User);
 //		System.out.println("------------------");
 //		myProxyInstance.sleep();
