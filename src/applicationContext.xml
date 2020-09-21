@@ -19,9 +19,9 @@
    -->
   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
     <!-- 配置MyBatis的主配置文件路径 -->
-    <property name="configLocation" value="classpath:mybatisconfig.xml"></property>
+    <property name="configLocation" value="classpath:mybatisconfig.xml" />
     <!-- 配置连接数据库的四大参数 -->
-    <property name="dataSource" ref="datasource"></property>
+    <property name="dataSource" ref="datasource" />
   </bean>
   
   <!-- 配置dataSource(数据源) -->
@@ -41,8 +41,8 @@
         所以需要配置SqlSessionFacoty工厂的名称，指定由他来生产对象
     -->
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-      <property name="basePackage" value="com.org.dao"></property>
-      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+      <property name="basePackage" value="com.org.dao" />
+      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
     
     <!-- 配置Dao层实现类的Bean
@@ -50,12 +50,12 @@
          容器自动生成的对象均是首字母小写，后面的不变
          特殊情况:当使用两个大写字母开头为类名时，容器返回的对象是原名
      -->
-     <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
+     <!-- <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
        <property name="courseDao" ref="courseDao"></property>
-     </bean>
+     </bean> -->
      
      <bean id="accountDaoImpl" class="com.org.dao.impl.AccountDaoImpl">
-       <property name="accountDao" ref="accountDao"></property>
+       <property name="accountDao" ref="accountDao" />
      </bean>
      <!-- 注解配置(自动扫描Dao层的包) -->
      <context:component-scan base-package="com.org.dao.impl" />
@@ -66,6 +66,8 @@
      <bean id="man" class="com.org.aspect.ManPeople" />
      <!-- 配置切面类 -->
      <bean id="myAspect" class="com.org.aspect.MyOneAspect" />
+     
+     
      <!-- aop的配置文件配置方式 -->
      <!-- <aop:config>
       
@@ -83,7 +85,7 @@
      
      
      <!-- 配置的方式配置Spring-AOP的内置事务 -->
-     <!-- 注册事务管理的核心类 -->
+     <!-- 注册事务管理的核心类(三种方式书写都需要这个核心类) -->
      <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
        <!-- 配置数据源
             保证多个业务方法调用的是一个连接，使用之前已经配置好的c3P0连接池
@@ -114,5 +116,35 @@
        </property>
      </bean>
      
-     <!-- 注解的方式配置Spring-AOP的内置事务 -->
+     
+     <!-- 注解的方式配置Spring-AOP的内置事务(最常用) -->
+     <!-- 注册事务驱动，底层会自动扫描事务注解，注入相关的事务操做代码 -->
+     <tx:annotation-driven transaction-manager="transactionManager"/>
+     
+     
+     <!-- Spring-Aspectj配置方式(最为灵活，功能最强大，可以通知织入到更加具体的地方) -->
+     <!-- 配置事务通知
+          事务通知中配置事务管理
+      -->
+     <tx:advice id="txAdvice" transaction-manager="transactionManager">
+       <!-- 配置事务的属性 -->
+       <tx:attributes>
+         <!--
+              isolation 设置事务的隔离级别，一般默认为DEFAULT
+			  propagation 设置事务的传播机制，默认Propagation.REQUIRED
+			  如果当前没有事务，就新建一个事务，如果已存在一个事务中，加入到这个事务中，这是最常见的选择
+			  rollbackFor 回滚 
+          -->
+         <tx:method name="transfer*" isolation="DEFAULT"
+         propagation="REQUIRED" rollback-for="Exception"/>
+       </tx:attributes>
+     </tx:advice>
+     
+     <!-- 配置AOP织入 -->
+     <aop:config> 
+       <!-- 配置切入点 -->
+       <aop:pointcut expression="execution(* com.org.dao.impl.*.*(..))" id="txpoint"/>
+       <!-- 配置顾问 -->
+       <aop:advisor advice-ref="txAdvice" pointcut-ref="txpoint"/>
+     </aop:config>
 </beans>

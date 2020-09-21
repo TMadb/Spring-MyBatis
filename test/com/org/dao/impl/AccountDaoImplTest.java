@@ -14,11 +14,11 @@ public class AccountDaoImplTest {
 	@Before
 	public void setUp() {
 		ApplicationContext api = new ClassPathXmlApplicationContext("applicationContext.xml");
-		accountService =(AccountService) api.getBean("ProxyService");
+		accountService =(AccountService) api.getBean("accountDaoImpl");
 	}
 	
 	@Test
-	public void testtransferAccount() {
+	public void testtransferAccount() throws Exception {
 		accountService.transferAccount(1, 2, 100.0);
 	}
 }
