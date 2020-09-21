@@ -95,6 +95,7 @@
      <bean id="ProxyService" 
      class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
        <!-- 要增强的目标对象 -->
+      <!--  <property name="target" ref="courseDaoImpl" /> -->
        <property name="target" ref="accountDaoImpl" />
        <!-- 事务管理器 -->
        <property name="transactionManager" ref="transactionManager" />

@@ -15,12 +15,12 @@ public class CourseDaoImplTest {
 	@Before
 	public void setUp() {
 		ApplicationContext api = new ClassPathXmlApplicationContext("applicationContext.xml");
-		courseService =(CourseDaoImpl) api.getBean("courseDaoImpl");
+		courseService =(CourseService) api.getBean("ProxyService");
 	}
 	
 	@Test
 	public void testinsertCourse() {
-		Course course = new Course(11,"Linux");
+		Course course = new Course(12,"JavaScript");
 		courseService.addCourse(course);
 	}
 }
