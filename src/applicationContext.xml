@@ -3,13 +3,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/aop 
-        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
   <!-- 配置SqlSessionFactory，用于生产SqlSession
        用于容器生成对象，所以需要放置MyBaytis的主配置文件路径
@@ -50,7 +53,11 @@
      <bean id="courseDaoImpl" class="com.org.dao.impl.CourseDaoImpl">
        <property name="courseDao" ref="courseDao"></property>
      </bean>
-     <!-- 注解配置 -->
+     
+     <bean id="accountDaoImpl" class="com.org.dao.impl.AccountDaoImpl">
+       <property name="accountDao" ref="accountDao"></property>
+     </bean>
+     <!-- 注解配置(自动扫描Dao层的包) -->
      <context:component-scan base-package="com.org.dao.impl" />
      
      <!-- aop的注解配置方式 -->
@@ -73,4 +80,38 @@
          <aop:around method="around" pointcut="SpeakPoint" />
        </aop:aspect>
      </aop:config> -->
+     
+     
+     <!-- 配置的方式配置Spring-AOP的内置事务 -->
+     <!-- 注册事务管理的核心类 -->
+     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <!-- 配置数据源
+            保证多个业务方法调用的是一个连接，使用之前已经配置好的c3P0连接池
+        -->
+       <property name="dataSource" ref="datasource" />
+     </bean>
+     
+     <!-- 配置事务管理器代理，使用代理生成带有事务管理功能的目标对象 -->
+     <bean id="ProxyService" 
+     class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+       <!-- 要增强的目标对象 -->
+       <property name="target" ref="accountDaoImpl" />
+       <!-- 事务管理器 -->
+       <property name="transactionManager" ref="transactionManager" />
+       <!-- 事务属性 -->
+       <property name="transactionAttributes">
+       <!-- 指定给目标方法中满足条件的方法织入带有事务管理功能的增强对象
+            AOP内置的事务不支持切入点表达式，但是支持简单的通配符配置
+            需要认为指定事务的隔离级别和传播机制
+            -Exception:因为Spring框架默认处理运行时异常(即程序运行时抛出异常的话内置的事务
+            管理会回滚)，而受检时异常的话默认不处理(即程序发生异常不会回滚还是会提交)，所以需要加上
+            这个参数
+        -->
+        <props>
+          <prop key="transfer*">ISOLATION_DEFAULT,PROPAGATION_REQUIRED,-Exception</prop>
+        </props>
+       </property>
+     </bean>
+     
+     <!-- 注解的方式配置Spring-AOP的内置事务 -->
 </beans>

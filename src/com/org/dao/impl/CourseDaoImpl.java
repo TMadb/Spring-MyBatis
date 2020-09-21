@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 
 import com.org.dao.CourseDao;
 import com.org.entity.Course;
+import com.org.service.CourseService;
 
 @Service
-public class CourseDaoImpl implements CourseDao {
+public class CourseDaoImpl implements CourseService {
 	
 	@Resource
 	CourseDao courseDao;
@@ -20,8 +21,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void insertCourse(Course course) {
-		// TODO Auto-generated method stub
-		courseDao.insertCourse(course);
+	public void addCourse(Course course) {
+		courseDao.insertCourse(course);		
 	}
 }

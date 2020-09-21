@@ -5,22 +5,20 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.org.entity.Course;
-import com.org.service.CourseService;
+import com.org.service.AccountService;
 
-public class CourseDaoImplTest {
+public class AccountDaoImplTest {
 	
-	CourseService courseService;
+	AccountService accountService;
 	
 	@Before
 	public void setUp() {
 		ApplicationContext api = new ClassPathXmlApplicationContext("applicationContext.xml");
-		courseService =(CourseDaoImpl) api.getBean("courseDaoImpl");
+		accountService =(AccountService) api.getBean("ProxyService");
 	}
 	
 	@Test
-	public void testinsertCourse() {
-		Course course = new Course(11,"Linux");
-		courseService.addCourse(course);
+	public void testtransferAccount() {
+		accountService.transferAccount(1, 2, 100.0);
 	}
 }
