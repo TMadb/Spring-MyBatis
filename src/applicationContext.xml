@@ -93,7 +93,7 @@
        <property name="dataSource" ref="datasource" />
      </bean>
      
-     <!-- 配置事务管理器代理，使用代理生成带有事务管理功能的目标对象 -->
+     <!-- 配置事务管理代理器，使用代理生成带有事务管理功能的目标对象 -->
      <bean id="ProxyService" 
      class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
        <!-- 要增强的目标对象 -->
